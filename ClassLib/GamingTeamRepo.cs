@@ -35,9 +35,9 @@ namespace ClassLib
             return gamingTeams;
         }
 
-        public GamingTeam? Update(GamingTeam id, GamingTeam obj)
+        public GamingTeam? Update(int id, GamingTeam obj)
         {
-            var existingTeam = GetById(id.Id);
+            var existingTeam = GetById(id);
             if (existingTeam != null)
             {
                 existingTeam.TeamName = obj.TeamName;

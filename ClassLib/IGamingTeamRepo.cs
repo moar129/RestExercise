@@ -11,7 +11,7 @@ namespace ClassLib
         T Add(T obj);
         T? GetById(int id);
         IEnumerable<T> Get();
-        T? Update(T id,T obj);
+        T? Update(int id,T obj);
         T? Delete(int id);
     }
 }

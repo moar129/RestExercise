@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ClassLib;
+using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -8,30 +9,53 @@ namespace RestExerciseApi.Controllers
     [ApiController]
     public class GameTeamsController : ControllerBase
     {
-        // GET: api/<GameTeamsController>
-        [HttpGet]
-        public IEnumerable<string> Get()
+        private IGamingTeamRepo<GamingTeam> _repo;
+        public GameTeamsController(IGamingTeamRepo<GamingTeam> repo) 
         {
-            return new string[] { "value1", "value2" };
+            _repo = repo;
+        }
+        // GET: api/<GameTeamsController>
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpGet]
+        public ActionResult<IEnumerable<GamingTeam>> Get()
+        {
+            var teams = _repo.Get();
+            if (teams.Count() == 0 )
+            {
+                return NotFound("No gaming teams found.");
+            }
+            return Ok(teams);
         }
 
         // GET api/<GameTeamsController>/5
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("{id}")]
-        public string Get(int id)
+        public ActionResult<GamingTeam> Get(int id)
         {
-            return "value";
+            var team = _repo.GetById(id);
+            if (team == null)
+            {
+                return NotFound($"Gaming team with id {id} not found.");
+            }
+            return Ok(team);
         }
 
         // POST api/<GameTeamsController>
+        //[ProducesResponseType(StatusCodes.Status201Created)]
+        //[ProducesResponseType(StatusCodes.Status409Conflict)]
         [HttpPost]
-        public void Post([FromBody]string value)
+        public GamingTeam Post([FromBody] GamingTeam team)
         {
+            return _repo.Add(team);
         }
 
         // PUT api/<GameTeamsController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        public GamingTeam Put(int id, [FromBody] GamingTeam team)
         {
+            return _repo.Update(id, team);
         }
 
         // DELETE api/<GameTeamsController>/5
