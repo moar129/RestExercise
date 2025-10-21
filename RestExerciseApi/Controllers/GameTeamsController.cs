@@ -44,41 +44,105 @@ namespace RestExerciseApi.Controllers
 
         // POST api/<GameTeamsController>
         [ProducesResponseType(StatusCodes.Status201Created)]
-        //[ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpPost]
         public ActionResult<GamingTeam> Post([FromBody] GamingTeam team)
         {
-            var createdTeam = _repo.Add(team);
-            return Created($"api/GameTeams/{createdTeam.Id}",createdTeam);
+            try
+            {
+                var newTeam = ConvertDTOToGamingTeam(team);
+                var createdTeam = _repo.Add(newTeam);
+                return Created($"api/GameTeams/{createdTeam.Id}", createdTeam);
+            }
+            catch (ArgumentNullException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
 
         }
 
         // PUT api/<GameTeamsController>/5
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpPut("{id}")]
         public ActionResult<GamingTeam> Put(int id, [FromBody] GamingTeam team)
         {
-            var updatedTeam = _repo.Update(id, team);
-            if (updatedTeam == null)
+            try
             {
-                return NotFound($"Item with id {id} not found.");
+                var updatedTeamData = ConvertDTOToGamingTeam(team);
+                var updatedTeam = _repo.Update(id, updatedTeamData);
+                if (updatedTeam == null)
+                {
+                    return NotFound($"Item with id {id} not found.");
+                }
+                return Ok(updatedTeam);
             }
-            return Ok(updatedTeam);
+            catch (ArgumentNullException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         // DELETE api/<GameTeamsController>/5
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpDelete("{id}")]
         public ActionResult<GamingTeam> Delete(int id)
         {
-            var deletedTeam = _repo.Delete(id);
-            if (deletedTeam == null)
+            try
             {
-                return NotFound($"Item with id {id} not found.");
+                var deletedTeam = _repo.Delete(id);
+                if (deletedTeam == null)
+                {
+                    return NotFound($"Item with id {id} not found.");
+                }
+                return NoContent();
             }
-            return NoContent();
+            catch (ArgumentNullException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        private GamingTeam ConvertDTOToGamingTeam(GamingTeam dto)
+        {
+            if (dto.TeamName == null) throw new ArgumentNullException("TeamName cannot be null");
+            if (dto.MembersCount < 1) throw new ArgumentOutOfRangeException("MembersCount must be at least 1");
+            if (dto.Game == null) throw new ArgumentNullException("Game cannot be null");
+
+            GamingTeam team = new GamingTeam() { TeamName = dto.TeamName, MembersCount = dto.MembersCount, Game = dto.Game, WinCount = dto.WinCount, LossCount = dto.LossCount };
+            return team;
         }
     }
 }
