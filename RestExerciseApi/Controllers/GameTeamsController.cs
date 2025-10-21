@@ -37,31 +37,48 @@ namespace RestExerciseApi.Controllers
             var team = _repo.GetById(id);
             if (team == null)
             {
-                return NotFound($"Gaming team with id {id} not found.");
+                return NotFound($"Item with id {id} not found.");
             }
             return Ok(team);
         }
 
         // POST api/<GameTeamsController>
-        //[ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         //[ProducesResponseType(StatusCodes.Status409Conflict)]
         [HttpPost]
-        public GamingTeam Post([FromBody] GamingTeam team)
+        public ActionResult<GamingTeam> Post([FromBody] GamingTeam team)
         {
-            return _repo.Add(team);
+            var createdTeam = _repo.Add(team);
+            return Created($"api/GameTeams/{createdTeam.Id}",createdTeam);
+
         }
 
         // PUT api/<GameTeamsController>/5
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpPut("{id}")]
-        public GamingTeam Put(int id, [FromBody] GamingTeam team)
+        public ActionResult<GamingTeam> Put(int id, [FromBody] GamingTeam team)
         {
-            return _repo.Update(id, team);
+            var updatedTeam = _repo.Update(id, team);
+            if (updatedTeam == null)
+            {
+                return NotFound($"Item with id {id} not found.");
+            }
+            return Ok(updatedTeam);
         }
 
         // DELETE api/<GameTeamsController>/5
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public ActionResult<GamingTeam> Delete(int id)
         {
+            var deletedTeam = _repo.Delete(id);
+            if (deletedTeam == null)
+            {
+                return NotFound($"Item with id {id} not found.");
+            }
+            return NoContent();
         }
     }
 }
