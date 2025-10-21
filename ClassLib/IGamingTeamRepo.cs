@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ClassLib
 {
-    interface IGamingTeamRepo<T>
+    public interface IGamingTeamRepo<T>
     {
         T Add(T obj);
         T? GetById(int id);
