@@ -72,7 +72,7 @@
 
         public override string ToString()
         {
-            return $"Id: {Id}, TeamName: {TeamName}, MembersCount: {MembersCount}, Game: {Game}, WinCount: {WinCount}, LossCount: {LossCount}";
+            return $"Id: {Id}, TeamName: {TeamName}, MembersCount: {MembersCount}, Game: {Game}, WinCount: {WinCount}, LossCount: {LossCount}, TotalMatches: {TotalMatches}";
         }
     }
 }
