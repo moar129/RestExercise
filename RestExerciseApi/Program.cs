@@ -1,4 +1,5 @@
 using ClassLib;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -13,6 +14,12 @@ builder.Services.AddCors(options =>
                                   .AllowAnyMethod()
                                   .AllowAnyHeader();
                               });
+    options.AddPolicy("ZealandOnly", policy =>
+    {
+        policy.WithOrigins("http://zealand.dk")
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
 });
 
 builder.Services.AddEndpointsApiExplorer();
@@ -35,9 +42,9 @@ if (app.Environment.IsDevelopment())
 app.UseSwagger();
 app.UseSwaggerUI();
 
-app.UseAuthorization();
-
 app.UseCors("AllowAll");
+
+app.UseAuthorization();
 
 app.MapControllers();
 

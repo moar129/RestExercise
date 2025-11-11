@@ -1,4 +1,5 @@
 ﻿using ClassLib;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -17,6 +18,7 @@ namespace RestExerciseApi.Controllers
         // GET: api/<GameTeamsController>
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [EnableCors("AllowAll")]
         [HttpGet]
         public ActionResult<IEnumerable<GamingTeam>> Get()
         {
@@ -78,6 +80,7 @@ namespace RestExerciseApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [EnableCors("ZealandOnly")]
         [HttpPut("{id}")]
         public ActionResult<GamingTeam> Put(int id, [FromBody] GamingTeam team)
         {
@@ -113,6 +116,7 @@ namespace RestExerciseApi.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [DisableCors]
         [HttpDelete("{id}")]
         public ActionResult<GamingTeam> Delete(int id)
         {
