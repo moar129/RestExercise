@@ -1,8 +1,7 @@
 ﻿using ClassLib;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+using RestExerciseApi.DTOs;
 
 namespace RestExerciseApi.Controllers
 {
@@ -49,7 +48,7 @@ namespace RestExerciseApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpPost]
-        public ActionResult<GamingTeam> Post([FromBody] GamingTeam team)
+        public ActionResult<GamingTeam> Post([FromBody] GamingTeamDTO team)
         {
             try
             {
@@ -82,7 +81,7 @@ namespace RestExerciseApi.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [EnableCors("ZealandOnly")]
         [HttpPut("{id}")]
-        public ActionResult<GamingTeam> Put(int id, [FromBody] GamingTeam team)
+        public ActionResult<GamingTeam> Put(int id, [FromBody] GamingTeamDTO team)
         {
             try
             {
@@ -139,13 +138,13 @@ namespace RestExerciseApi.Controllers
             }
         }
 
-        private GamingTeam ConvertDTOToGamingTeam(GamingTeam dto)
+        private GamingTeam ConvertDTOToGamingTeam(GamingTeamDTO dto)
         {
             if (dto.TeamName == null) throw new ArgumentNullException("TeamName cannot be null");
             if (dto.MembersCount < 1) throw new ArgumentOutOfRangeException("MembersCount must be at least 1");
             if (dto.Game == null) throw new ArgumentNullException("Game cannot be null");
 
-            GamingTeam team = new GamingTeam() { TeamName = dto.TeamName, MembersCount = dto.MembersCount, Game = dto.Game, WinCount = dto.WinCount, LossCount = dto.LossCount };
+            GamingTeam team = new GamingTeam() { TeamName = dto.TeamName, MembersCount = dto.MembersCount.Value, Game = dto.Game, WinCount = dto.WinCount.Value, LossCount = dto.LossCount.Value };
             return team;
         }
     }

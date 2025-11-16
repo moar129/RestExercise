@@ -5,22 +5,22 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
-//builder.Services.AddCors(options =>
-//{
-//    options.AddPolicy(name: "AllowAll",
-//                              policy =>
-//                              {
-//                                  policy.AllowAnyOrigin()
-//                                  .AllowAnyMethod()
-//                                  .AllowAnyHeader();
-//                              });
-//    options.AddPolicy("ZealandOnly", policy =>
-//    {
-//        policy.WithOrigins("http://zealand.dk")
-//              .AllowAnyMethod()
-//              .AllowAnyHeader();
-//    });
-//});
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: "AllowAll",
+                              policy =>
+                              {
+                                  policy.AllowAnyOrigin()
+                                  .AllowAnyMethod()
+                                  .AllowAnyHeader();
+                              });
+    options.AddPolicy("ZealandOnly", policy =>
+    {
+        policy.WithOrigins("http://zealand.dk")
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
